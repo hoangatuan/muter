@@ -97,8 +97,8 @@ struct MutationTestingDelegate: MutationTestingIODelegate {
             process.environment?[schemata.id] = "YES"
             
             let testTarget = configuration.testTarget
-            let fileName = schemata.fileName
-            testCommandArguments.append("-only-testing:\(testTarget)/\(fileName)Tests")
+            let testFileName = createTestFileName(from: schemata.fileName)
+            testCommandArguments.append("-only-testing:\(testTarget)/\(testFileName)")
         }
 
         process.arguments = testCommandArguments
@@ -107,6 +107,22 @@ struct MutationTestingDelegate: MutationTestingIODelegate {
         process.standardError = fileHandle
 
         return process
+    }
+    
+    private func createTestFileName(from fileName: String) -> String {
+        // Split the file name into name and extension components
+        let fileURL = URL(fileURLWithPath: fileName)
+        let baseName = fileURL.deletingPathExtension().lastPathComponent
+        let fileExtension = fileURL.pathExtension
+        
+        // Ensure the file name has a valid extension
+        guard !baseName.isEmpty, !fileExtension.isEmpty else {
+            fatalError("Can not empty")
+        }
+        
+        // Append "Tests" to the base name and reattach the file extension
+        let testFileName = "\(baseName)Tests"
+        return testFileName
     }
 
     func fileHandle(
