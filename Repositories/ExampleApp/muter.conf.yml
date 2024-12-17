@@ -5,6 +5,9 @@ arguments:
 - ExampleApp
 - -destination
 - platform=iOS Simulator,name=iPhone SE (3rd generation)
+- -derivedDataPath
+# - /Users/tuanhoang/Documents/DeData
+- ./
 - test
 executable: /usr/bin/xcodebuild
 exclude: []

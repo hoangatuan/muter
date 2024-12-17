@@ -87,7 +87,7 @@ struct MutationTestingDelegate: MutationTestingIODelegate {
         schemata: MutationSchema,
         and fileHandle: FileHandle
     ) throws -> Process {
-        let testCommandArguments = schemata == .null
+        var testCommandArguments = schemata == .null
             ? configuration.testCommandArguments
             : configuration.testWithoutBuildArguments(with: muterTestRunFileName)
 
@@ -95,6 +95,10 @@ struct MutationTestingDelegate: MutationTestingIODelegate {
 
         if schemata != .null {
             process.environment?[schemata.id] = "YES"
+            
+            let testTarget = configuration.testTarget
+            let fileName = schemata.fileName
+            testCommandArguments.append("-only-testing:\(testTarget)/\(fileName)Tests")
         }
 
         process.arguments = testCommandArguments

@@ -100,6 +100,13 @@ extension MuterConfiguration {
             return arguments
         }
     }
+    
+    var testTarget: String {
+        let schemeIndex = testCommandArguments.firstIndex(where: { $0 == "-scheme" })!
+        let scheme = testCommandArguments[schemeIndex + 1]
+        let testTarget = scheme + "Tests"
+        return testTarget
+    }
 
     func testWithoutBuildArguments(with testRunFile: String) -> [String] {
         let arguments = testCommandArguments
